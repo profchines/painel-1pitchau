@@ -1,18 +1,55 @@
 "use client"
-import { SyntheticEvent, useCallback, useRef } from 'react'
+import { SyntheticEvent, useCallback, useRef, useState } from 'react'
 import styles from './style.module.css'
+import axios from 'axios';
+import { Toast } from '@/components/Toast';
+import { Loading } from '@/components/Loading';
 
 export default function Login() {
 
     const refForm = useRef<any>();
+    const [toast, setToast] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const submitForm = useCallback((e: SyntheticEvent) => {
         e.preventDefault();
 
+        if (refForm.current.checkValidity()) {
+            const target = e.target as typeof e.target & {
+                email: { value: string },
+                senha: { value: string },
+            }
+
+            axios.post('/api/login',
+                {
+                    email: target.email.value,
+                    senha: target.senha.value,
+                }
+            )
+            .then(() => {
+
+            })
+            .catch((err) => {
+                console.log(err)
+                setToast(true)
+            })
+
+        } else {
+            refForm.current.classList.add('was-validated')
+        }
+
     }, [])
 
-    return(
+    return (
         <>
+
+            <Loading loading={loading} />
+            <Toast
+                show={toast}
+                message='Dados Inválidos'
+                colors='danger'
+                onClose={() => {setToast(false)}}
+            />
             <div
                 className={styles.main}
             >
@@ -45,7 +82,7 @@ export default function Login() {
                             >
                                 Email
                             </label>
-                            <input 
+                            <input
                                 type='email'
                                 className='form-control'
                                 placeholder='Digite seu email'
@@ -67,7 +104,7 @@ export default function Login() {
                             >
                                 Senha
                             </label>
-                            <input 
+                            <input
                                 type='password'
                                 className='form-control'
                                 placeholder='Digite sua senha'
