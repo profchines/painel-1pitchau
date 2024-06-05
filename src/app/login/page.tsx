@@ -4,8 +4,11 @@ import styles from './style.module.css'
 import axios from 'axios';
 import { Toast } from '@/components/Toast';
 import { Loading } from '@/components/Loading';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+
+    const router = useRouter()
 
     const refForm = useRef<any>();
     const [toast, setToast] = useState(false)
@@ -15,6 +18,8 @@ export default function Login() {
         e.preventDefault();
 
         if (refForm.current.checkValidity()) {
+            setLoading(true)
+
             const target = e.target as typeof e.target & {
                 email: { value: string },
                 senha: { value: string },
@@ -26,13 +31,27 @@ export default function Login() {
                     senha: target.senha.value,
                 }
             )
-            .then(() => {
+                .then((resposta) => {
+                    console.log(resposta.data)
 
-            })
-            .catch((err) => {
-                console.log(err)
-                setToast(true)
-            })
+                    // SPA - React
+                    // LocalStorage -> Navegador
+                    // SessionStorage -> Navegador - X
+                    
+                    // Nextjs - SSR - Servidor
+                    // Requisição -> Headers
+                    // Cookies -> Navegador
+
+                    router.push('/dashboard')
+
+                    setLoading(false)
+                })
+                .catch((err) => {
+                    console.log(err)
+                    setToast(true)
+                    setLoading(false)
+
+                })
 
         } else {
             refForm.current.classList.add('was-validated')
@@ -48,7 +67,7 @@ export default function Login() {
                 show={toast}
                 message='Dados Inválidos'
                 colors='danger'
-                onClose={() => {setToast(false)}}
+                onClose={() => { setToast(false) }}
             />
             <div
                 className={styles.main}

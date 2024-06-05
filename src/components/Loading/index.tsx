@@ -4,6 +4,7 @@ interface ILoading {
 
 export const Loading = (props: ILoading) => {
     return (
+        props.loading ? 
         <div
             className="d-flex justify-content-center align-items-center"
             style={{
@@ -26,5 +27,7 @@ export const Loading = (props: ILoading) => {
             </div>
 
         </div>
+        :
+        <></>
     )
 }
