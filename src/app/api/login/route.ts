@@ -26,8 +26,8 @@ export async function POST(req: Request) {
                     objUsuario,
                     '123465',//secret
                     {
-                        expiresIn: '1min'// dias
-                        // expiresIn: '1d'// dias
+                        // expiresIn: '1min'// dias
+                        expiresIn: '1d'// dias
                         // expiresIn: '1h'// horas
                         // expiresIn: '1min'// minutos
                     }

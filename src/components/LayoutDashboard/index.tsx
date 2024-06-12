@@ -1,4 +1,12 @@
-export const LayoutDashboard = () => {
+import { validaPermissao } from "@/services/token"
+import { ReactNode } from "react"
+
+interface IProps {
+    children: ReactNode
+    token: string | undefined
+}
+
+export const LayoutDashboard = (props: IProps) => {
     return (
         <>
             <header
@@ -45,6 +53,29 @@ export const LayoutDashboard = () => {
                                         Dashboard
                                     </a>
                                 </li>
+                                <li className="nav-item">
+                                    <a
+                                        className={`nav-link`}
+                                        href={'/dashboard'}
+                                    >
+                                        <span data-feather="home"></span>
+                                        Categorias
+                                    </a>
+                                </li>
+                                {
+                                    validaPermissao(props.token,
+                                        ['admin', 'visitante']
+                                    ) &&
+                                    <li className="nav-item">
+                                        <a
+                                            className={`nav-link`}
+                                            href={'/usuarios'}
+                                        >
+                                            <span data-feather="home"></span>
+                                            Usuários
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </nav>
@@ -52,7 +83,7 @@ export const LayoutDashboard = () => {
                     <main
                         className="col-md-9 ms-sm-auto col-lg-10 px-md-4"
                     >
-
+                        {props.children}
                     </main>
 
                 </div>
